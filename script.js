@@ -6,6 +6,8 @@ function calculator(){
     let number1 =  null;
     let number2 = null;
     let operator = null;
+    let operatorFlag = false; // checks if operator is pressed twice
+
 
 
     function setOperand(operandValue){
@@ -26,6 +28,13 @@ function calculator(){
         
     }
 
+    function clearData(){
+        number1 =  null;
+        number2 = null;
+        operator = null;
+        populateDisplay(0);
+    }
+
     // Calculator Functionalities
     function add(num1, num2){
         return num1 + num2;
@@ -41,6 +50,22 @@ function calculator(){
 
     function divide(num1, num2) {
         return num1 / num2;
+    }
+
+    function isEqualOperator(opr){
+        return opr == "=";
+    }
+
+    function isClearOperator(opr){
+        return opr == "clear";
+    }
+
+    function equalOperation() {
+        if(number1 != null && number2 != null){
+            number1 = operate(operator, number1, number2);
+            number2 = null;
+            populateDisplay(number1);
+        }
     }
 
     // Operate Determines which operation to perform based on input
@@ -63,9 +88,9 @@ function calculator(){
                 result = divide(num1, num2);
                 break;
             default:
+                result = 0;
                 break;
         }
-        console.log(result);
         return result;
     }
 
@@ -84,17 +109,22 @@ function calculator(){
 
     function handleButtonClick(button) {
         button.addEventListener("click",() => {
-            let inputValue = parseInt(button.value);
-
-            if(Number.isInteger(inputValue)){
-                setOperand(inputValue)
-                populateDisplay(inputValue);
+            let operandValue = parseInt(button.value);
+            let operatorValue = button.value
+            if(Number.isInteger(operandValue)){
+                setOperand(operandValue)
+                populateDisplay(operandValue);
+                operatorFlag = false;
             } else {
-                if(number1 != null && number2 != null){
-                    number1 = operate(operator, number1, number2);
-                    populateDisplay(number1);
+                if(isClearOperator(operatorValue)){
+                    clearData();
+                } else if(isEqualOperator(operatorValue)){
+                    equalOperation();
+                } else {
+                    if(!operatorFlag) equalOperation(); 
+                    setOperator(operatorValue);
+                    operatorFlag = true;
                 }
-                setOperator(button.value);
             }
         });
     }
