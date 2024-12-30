@@ -19,16 +19,31 @@ function calculator(){
             button.style.height = `${buttonSize}px`;
             button.style.margin = `${buttonGap}px`;
             button.addEventListener("click",() => {
-                if(button.value != "=" && button.value != "clear"){
-                    populateDisplay(button.value);
+                let inputValue = parseInt(button.value);
+
+                if(Number.isInteger(inputValue) && number1 == null){
+                    number1 = inputValue;
+                    populateDisplay(inputValue);
+                } else if(Number.isInteger(inputValue) && number1 != null){
+                    number2 = inputValue;
+                    populateDisplay(inputValue);
+                } else if(!Number.isInteger(inputValue) && number1 != null && number2 == null){
+                    operator = button.value;
+                } else if(!Number.isInteger(inputValue) && number1 != null && number2 != null){
+                    console.log(number1,operator,number2);
+                    number1 = operate(operator, number1, number2);
+                    operator = button.value;
+                    populateDisplay(number1);
                 }
+
             });
         });
     }
 
     function populateDisplay(value) {
         const display = document.querySelector("#display");
-        display.textContent += value;
+        display.textContent = value;
+        
     }
 
     // Calculator Functionalities
@@ -50,25 +65,28 @@ function calculator(){
 
     // Operate Determines which operation to perform based on input
     function operate(opr, num1, num2) {
+        let result = 0;
         switch(opr){
             case '+':
-                add(num1, num2);
+                result = add(num1, num2);
                 break;
 
             case '-':
-                substract(num1, num2);
+                result = substract(num1, num2);
                 break;
 
             case '*':
-                multiply(num1, num2);
+                result = multiply(num1, num2);
                 break;
 
             case '/':
-                divide(num1, num2);
+                result = divide(num1, num2);
                 break;
             default:
                 break;
         }
+        console.log(result);
+        return result;
     }
 
     renderCalculatorButton();
