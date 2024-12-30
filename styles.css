@@ -1,0 +1,105 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.flex-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+
+#main-container {
+    width: 100vw;
+    height: 100vh;
+}
+
+#calculator-wrapper {
+    width: 500px;
+    height: 610px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: black;
+    background-color: black;
+    
+    padding: 20px;
+}
+
+#display {
+    width: 440px;
+    height: 70px;
+    border: 1px solid white;
+    background-color: grey;
+
+    font-size: 52px;
+
+    padding: 15px 20px;
+    margin: 10px;
+    justify-content: end;
+}
+
+/* button container css */
+#button-container {
+    width: 480px;
+    height: 480px;
+    border: 1px solid white;
+    background-color: rgb(117, 100, 100);
+
+    margin: 10px;
+}
+
+#button-container button {
+    font-size: 24px;
+}
+
+#num9,
+#num8,
+#num7 {
+    order: 1;
+}
+
+#add {
+    order: 2;
+}
+
+#num6,
+#num5,
+#num4 {
+    order: 3;
+}
+
+#substract {
+    order: 4;
+}
+
+#num3,
+#num2,
+#num1 {
+    order: 5;
+}
+
+#multiply {
+    order: 6;
+}
+
+#clear {
+    order: 7;
+}
+
+#num0 {
+    order: 8;
+}
+
+#equal {
+    order: 9;
+}
+
+#divide {
+    order: 10;
+}
+
+
+
+
