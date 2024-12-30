@@ -78,11 +78,11 @@ function calculator(){
             button.style.width = `${buttonSize}px`;
             button.style.height = `${buttonSize}px`;
             button.style.margin = `${buttonGap}px`;
-            handleButtonClick();
+            handleButtonClick(button);
         });
     }
 
-    function handleButtonClick() {
+    function handleButtonClick(button) {
         button.addEventListener("click",() => {
             let inputValue = parseInt(button.value);
 
