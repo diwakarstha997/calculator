@@ -6,15 +6,21 @@ function calculator(){
     let number1 =  null;
     let number2 = null;
     let operator = null;
-    let operatorFlag = false; // checks if operator is pressed twice
-
+    let equalFlag = false;
 
 
     function setOperand(operandValue){
-        if(number1 == null){
-            number1 = operandValue;
+        if(operator == null){
+            if(number1 == null || equalFlag) {
+                number1 = operandValue;
+                equalFlag = false;
+            } else {
+                number1 =  number1*10 +operandValue;
+            }
+            return number1;
         } else {
-            number2 = operandValue;
+            number2 = number2 == null ? operandValue : number2*10 +operandValue;
+            return number2;
         }
     }
 
@@ -110,20 +116,22 @@ function calculator(){
     function handleButtonClick(button) {
         button.addEventListener("click",() => {
             let operandValue = parseInt(button.value);
-            let operatorValue = button.value
+
             if(Number.isInteger(operandValue)){
-                setOperand(operandValue)
-                populateDisplay(operandValue);
-                operatorFlag = false;
+                let displayValue = setOperand(operandValue)
+                populateDisplay(displayValue);
             } else {
+                let operatorValue = button.value
+
                 if(isClearOperator(operatorValue)){
                     clearData();
                 } else if(isEqualOperator(operatorValue)){
                     equalOperation();
-                } else {
-                    if(!operatorFlag) equalOperation(); 
+                    operator = null;
+                    equalFlag = true;
+                } else { // when operator is + - * /
+                    equalOperation(); 
                     setOperator(operatorValue);
-                    operatorFlag = true;
                 }
             }
         });
