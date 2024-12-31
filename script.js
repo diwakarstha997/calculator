@@ -84,6 +84,7 @@ function calculator(){
         setFirstOperand(null);
         setSecondOperand(null);
         setOperator(null);
+        setEqualPressed(false);
         populateDisplay(0);
     }
 
@@ -156,11 +157,10 @@ function calculator(){
     function processOperator(value){
         if(isClearOperator(value)){
             clearData();
-        } else if(isEqualOperator(value)){
-            equalOperation();
-        } else { // when operator is + - * /
+        } else { // when operator is + - * / =
             processOperation();
-            setOperator(value);
+            if(isEqualOperator(value)) equalOperation();
+            else setOperator(value);
         }
     }
 
@@ -181,7 +181,6 @@ function calculator(){
     }
 
     function equalOperation() {
-        processOperation();
         setOperator(null);
         setEqualPressed(true);
     }
