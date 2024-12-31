@@ -6,28 +6,60 @@ function calculator(){
     let number1 =  null;
     let number2 = null;
     let operator = null;
-    let equalFlag = false;
+    let equalPressed = false;
 
 
-    function setOperand(operandValue){
-        if(operator == null){
-            if(number1 == null || equalFlag) {
-                number1 = operandValue;
-                equalFlag = false;
-            } else {
-                number1 =  number1*10 +operandValue;
-            }
-            return number1;
-        } else {
-            number2 = number2 == null ? operandValue : number2*10 +operandValue;
-            return number2;
-        }
+
+    // Basic functionalities of calculator
+
+    // setter functions
+    function setFirstOperand(value) {
+        number1 = value;
     }
 
-    function setOperator(operatorValue) {
-            operator = operatorValue;
+    function setSecondOperand(value) {
+        number2 = value;
     }
 
+    function setOperator(value) {
+        operator = value;
+    }
+
+    function setEqualPressed(booleanValue) {
+        equalPressed = booleanValue;
+    }
+
+    // getter functions
+    function getFirstOperand() {
+       return number1;
+    }
+
+    function getSecondOperand() {
+       return number2;
+    }
+
+    function getOperator() {
+        return operator;
+    }
+
+    // null checks
+    function isFirstOperandNull() {
+        return number1 == null;
+    }
+
+    function isSecondOperandNull() {
+        return number2 == null;
+    }
+
+    function isOperatorNull() {
+        return operator == null;
+    }
+
+    // euqal check
+    function isEqualPressed() {
+        return equalPressed;
+    }
+    
     function populateDisplay(value) {
         const display = document.querySelector("#display");
         display.textContent = value;
@@ -35,13 +67,12 @@ function calculator(){
     }
 
     function clearData(){
-        number1 =  null;
-        number2 = null;
-        operator = null;
+        setFirstOperand(null);
+        setSecondOperand(null);
+        setOperator(null);
         populateDisplay(0);
     }
 
-    // Calculator Functionalities
     function add(num1, num2){
         return num1 + num2;
     }
@@ -58,6 +89,63 @@ function calculator(){
         return num1 / num2;
     }
 
+
+    // handles user buton click 
+    function handleButtonClick(button) {
+        button.addEventListener("click",() => {
+            let userInput = button.value;
+            let integerValue = convertToInteger(userInput);
+
+            if(Number.isInteger(integerValue)){
+                processOperand(integerValue);
+            } else {
+                processOperator(userInput);
+            }
+        });
+    }
+
+    function convertToInteger(value){
+        return parseInt(value);
+    }
+
+    // handles integers input
+    function processOperand(value){
+        if(isOperatorNull()){
+            if(isFirstOperandNull() || isEqualPressed()) {
+                setFirstOperand(value);
+                setEqualPressed(false);
+            } else {
+                value = appendLastDigit(getFirstOperand(), value);
+                setFirstOperand(value);
+            }
+        } else {
+            if(isSecondOperandNull){
+                setSecondOperand(value);
+            } else {
+                value = appendLastDigit(getSecondOperand(), value);
+                setSecondOperand(value);
+            }
+        }
+
+        populateDisplay(value);
+    }
+
+    function appendLastDigit(number, digit) {
+        return number * 10 + digit;
+    }
+
+    // handles other input
+    function processOperator(value){
+        if(isClearOperator(value)){
+            clearData();
+        } else if(isEqualOperator(value)){
+            equalOperation();
+        } else { // when operator is + - * /
+            processOperation();
+            setOperator(value);
+        }
+    }
+
     function isEqualOperator(opr){
         return opr == "=";
     }
@@ -66,11 +154,26 @@ function calculator(){
         return opr == "clear";
     }
 
+    function isOperationValid(){
+        if(!isFirstOperandNull() && !isSecondOperandNull()){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     function equalOperation() {
-        if(number1 != null && number2 != null){
-            number1 = operate(operator, number1, number2);
-            number2 = null;
-            populateDisplay(number1);
+        processOperation();
+        setOperator(null);
+        setEqualPressed(true);
+    }
+
+    function processOperation(){
+        if(isOperationValid()){
+            let result = operate(getOperator(),getFirstOperand(),getSecondOperand());
+            setFirstOperand(result);
+            populateDisplay(result);
+            setSecondOperand(null);
         }
     }
 
@@ -113,29 +216,7 @@ function calculator(){
         });
     }
 
-    function handleButtonClick(button) {
-        button.addEventListener("click",() => {
-            let operandValue = parseInt(button.value);
 
-            if(Number.isInteger(operandValue)){
-                let displayValue = setOperand(operandValue)
-                populateDisplay(displayValue);
-            } else {
-                let operatorValue = button.value
-
-                if(isClearOperator(operatorValue)){
-                    clearData();
-                } else if(isEqualOperator(operatorValue)){
-                    equalOperation();
-                    operator = null;
-                    equalFlag = true;
-                } else { // when operator is + - * /
-                    equalOperation(); 
-                    setOperator(operatorValue);
-                }
-            }
-        });
-    }
 
     renderCalculatorButton();
 }
