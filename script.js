@@ -2,6 +2,20 @@
 const buttonContainer = document.querySelector("#button-container");
 const buttonList = [...buttonContainer.querySelectorAll("button")];
 
+function renderCalculatorButton(){
+    const buttonContainerWidth = buttonContainer.getBoundingClientRect().width;
+    const buttonSize = buttonContainerWidth / 5;     
+    const buttonGap = buttonSize / 12;
+
+    buttonList.forEach((button) => {
+        button.style.width = `${buttonSize}px`;
+        button.style.height = `${buttonSize}px`;
+        button.style.margin = `${buttonGap}px`;
+    });
+}
+
+renderCalculatorButton();
+
 function calculator(){
     let number1 =  null;
     let number2 = null;
@@ -91,16 +105,20 @@ function calculator(){
 
 
     // handles user buton click 
-    function handleButtonClick(button) {
-        button.addEventListener("click",() => {
-            let userInput = button.value;
-            let integerValue = convertToInteger(userInput);
+    function handleButtonClick() {
+        buttonList.forEach((button) => {
+            button.addEventListener("click",() => {
+                let userInput = button.value;
+                let integerValue = convertToInteger(userInput);
 
-            if(Number.isInteger(integerValue)){
-                processOperand(integerValue);
-            } else {
-                processOperator(userInput);
-            }
+                button.focus();
+
+                if(Number.isInteger(integerValue)){
+                    processOperand(integerValue);
+                } else {
+                    processOperator(userInput);
+                }
+            });
         });
     }
 
@@ -119,7 +137,7 @@ function calculator(){
                 setFirstOperand(value);
             }
         } else {
-            if(isSecondOperandNull){
+            if(isSecondOperandNull()){
                 setSecondOperand(value);
             } else {
                 value = appendLastDigit(getSecondOperand(), value);
@@ -203,22 +221,7 @@ function calculator(){
         return result;
     }
 
-    function renderCalculatorButton(){
-        const buttonContainerWidth = buttonContainer.getBoundingClientRect().width;
-        const buttonSize = buttonContainerWidth / 5;     
-        const buttonGap = buttonSize / 12;
-
-        buttonList.forEach((button) => {
-            button.style.width = `${buttonSize}px`;
-            button.style.height = `${buttonSize}px`;
-            button.style.margin = `${buttonGap}px`;
-            handleButtonClick(button);
-        });
-    }
-
-
-
-    renderCalculatorButton();
+    handleButtonClick();
 }
 
 calculator();
